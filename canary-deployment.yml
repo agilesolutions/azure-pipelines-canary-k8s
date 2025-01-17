@@ -28,4 +28,10 @@ stages:
         command: buildAndPush
         Dockerfile: app/Dockerfile
         tags: |
-          $(tag)    
+          $(tag)
+
+    - publish: manifests
+      artifact: manifests
+
+    - publish: misc
+      artifact: misc
