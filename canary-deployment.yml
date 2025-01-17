@@ -1,0 +1,31 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  imageName: azure-pipelines-canary-k8s # name of ACR image
+  dockerRegistryServiceConnection: dockerhub # name of ACR service connection
+  imageRepository: 'azure-pipelines-canary-k8s' # name of image repository
+  containerRegistry: dockerhub # name of Azure container registry
+  tag: '$(Build.BuildId)'
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:  
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Build and push image
+      inputs:
+        containerRegistry: $(dockerRegistryServiceConnection)
+        repository: $(imageName)
+        command: buildAndPush
+        Dockerfile: app/Dockerfile
+        tags: |
+          $(tag)
