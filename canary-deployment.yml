@@ -24,8 +24,8 @@ stages:
       displayName: Build and push image
       inputs:
         containerRegistry: $(dockerRegistryServiceConnection)
-        repository: $(imageName)
+        repository: $(imageRepository)
         command: buildAndPush
         Dockerfile: app/Dockerfile
         tags: |
-          $(tag)
+          $(tag)    
