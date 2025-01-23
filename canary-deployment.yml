@@ -40,6 +40,7 @@ stages:
   dependsOn: Build
   condition: succeeded()
 
+
   jobs:
   - deployment: Deploycanary
     displayName: Deploy canary
