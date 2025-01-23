@@ -23,5 +23,13 @@ kubectl get nodes
 kubectl describe node
 kubectl top node aks-agentpool-14651446-vmss000000
 ```
+## Cleanup
+```
+az group delete --name aks-cluster-template_rg001
+```
+
+## References
+- [Tutorial: Use a canary deployment strategy for Kubernetes](https://learn.microsoft.com/en-us/azure/devops/pipelines/ecosystems/kubernetes/canary-demo?view=azure-devops&tabs=yaml)
+
 
 
