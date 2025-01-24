@@ -33,11 +33,11 @@ stages:
       inputs:
         SourceFolder: '$(System.DefaultWorkingDirectory)/manifests-releasing'
         Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/manifests'
         OverWrite: true
 
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/manifests'
         ArtifactName: 'manifests'
         publishLocation: 'Container'
