@@ -5,9 +5,8 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  imageName: azure-pipelines-canary-k8s # name of ACR image
   dockerRegistryServiceConnection: 'dockerhub' # name of ACR service connection
-  imageRepository: 'agilesolutions/azure-pipelines-canary-k8s' # name of image repository
+  imageRepository: 'agilesolutions/app1nginx' # name of image repository
   containerRegistry: 'Docker Hub' # name of Azure container registry
   tag: '$(Build.BuildId)'
 
@@ -26,11 +25,11 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         repository: $(imageRepository)
         command: buildAndPush
-        Dockerfile: app/Dockerfile
+        Dockerfile: app-releasing/Dockerfile
         tags: |
           $(tag)
 
-    - publish: manifests
+    - publish: manifests-canary
       artifact: manifests
 
     - publish: misc

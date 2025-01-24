@@ -18,12 +18,10 @@ spec:
         version: baseline
     spec:
       containers:
-      - name: sampleapp
-        # Replace <your-container-registry> with your actual container registry
-        image:  agilesolutions/azure-pipelines-canary-k8s:latest
-        ports:
-        - containerPort: 8000
-        - containerPort: 8080
+        - name: app1-nginx
+          image: agilesolutions/app1nginx
+          ports:
+            - containerPort: 80
       imagePullSecrets:
       - name: my-acr-secret
 ---
@@ -47,11 +45,9 @@ spec:
         version: canary
     spec:
       containers:
-      - name: sampleapp
-        # Replace <your-container-registry> with your actual container registry
-        image:  agilesolutions/azure-pipelines-canary-k8s:latest
-        ports:
-        - containerPort: 8000
-        - containerPort: 8080
+        - name: app1-nginx
+          image: agilesolutions/app1nginx
+          ports:
+            - containerPort: 80
       imagePullSecrets:
       - name: my-acr-secret
