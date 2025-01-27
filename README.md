@@ -11,6 +11,12 @@ This tutorial uses Docker Registry and Azure Resource Manager service connection
 az group create --name aks-cluster-template_rg001 --location centralus
 ```
 
+## Create template spec and form
+```
+az ts create --name clusterspec --version 1 --resource-group tks-cluster-template_rg001 --location centralus  --template-file ./arm-templates/azuredeploy.json --ui-form-definition ./ arm-templates/clusterform.json
+```
+
+
 ## Portal deploy cluster with custom ARM template
 - From portal search for "Deploy a", this will lead you to custom deployment (Deploy from a custom deployment).
 - Build your own template...
@@ -33,6 +39,18 @@ kubectl create ns prod
 ## Cleanup
 ```
 az group delete --name aks-cluster-template_rg001
+```
+
+## Bicep
+
+### Decompile ARM template
+```
+az bicep decompile --file ./arm-templates/azuredeploy.json
+```
+
+### Deploy bicep templates
+```
+az deployment group create --resource-group aks-cluster-template_rg001 --template-file azuredeploy.bicep --parameters dnsPrefix=rob
 ```
 
 ## References

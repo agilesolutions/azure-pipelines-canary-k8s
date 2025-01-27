@@ -25,6 +25,7 @@
     },
     "dnsPrefix": {
       "type": "string",
+      "defaultValue": "arm",
       "metadata": {
         "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
       }
@@ -56,12 +57,14 @@
     },
     "linuxAdminUsername": {
       "type": "string",
+      "defaultValue": "armAdmin",
       "metadata": {
         "description": "User name for the Linux Virtual Machines."
       }
     },
     "sshRSAPublicKey": {
       "type": "string",
+      "defaultValue": "asdfsadf",
       "metadata": {
         "description": "Configure all linux machines with the SSH RSA public key string. Your key should include three parts, for example 'ssh-rsa AAAAB...snip...UcyupgH azureuser@linuxvm'"
       }
