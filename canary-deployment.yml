@@ -108,7 +108,7 @@ stages:
             inputs:
               action: 'createSecret'
               connectionType: 'azureResourceManager'
-              azureSubscriptionConnection: 'azure-pipelines-canary-sc'
+              azureSubscriptionConnection: 'aks-canary-sc'
               azureResourceGroup: 'aks-cluster-template_rg001'
               kubernetesCluster: 'aks101cluster'
               secretType: 'dockerRegistry'
@@ -120,7 +120,7 @@ stages:
             inputs:
               action: 'promote'
               connectionType: 'azureResourceManager'
-              azureSubscriptionConnection: 'azure-pipelines-canary-sc'
+              azureSubscriptionConnection: 'aks-canary-sc'
               azureResourceGroup: 'aks-cluster-template_rg001'
               kubernetesCluster: 'aks101cluster'
               strategy: 'canary'
@@ -148,7 +148,7 @@ stages:
             inputs:
               action: 'createSecret'
               connectionType: 'azureResourceManager'
-              azureSubscriptionConnection: 'azure-pipelines-canary-sc'
+              azureSubscriptionConnection: 'aks-canary-sc'
               azureResourceGroup: 'aks-cluster-template_rg001'
               kubernetesCluster: 'aks101cluster'
               secretType: 'dockerRegistry'
@@ -159,7 +159,7 @@ stages:
             inputs:
               action: 'reject'
               connectionType: 'azureResourceManager'
-              azureSubscriptionConnection: 'azure-pipelines-canary-sc'
+              azureSubscriptionConnection: 'aks-canary-sc'
               azureResourceGroup: 'aks-cluster-template_rg001'
               kubernetesCluster: 'aks101cluster'
               namespace: 'default'
