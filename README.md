@@ -23,6 +23,13 @@ kubectl get nodes
 kubectl describe node
 kubectl top node aks-agentpool-14651446-vmss000000
 ```
+## Create Namespaces
+```
+kubectl create ns dev
+kubectl create ns qa
+kubectl create ns staging
+kubectl create ns prod
+```
 ## Cleanup
 ```
 az group delete --name aks-cluster-template_rg001
