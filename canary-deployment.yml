@@ -34,11 +34,11 @@ stages:
 
     - publish: misc
       artifact: misc
+
 - stage: DeployCanary
   displayName: Deploy canary
   dependsOn: Build
   condition: succeeded()
-
 
   jobs:
   - deployment: Deploycanary
@@ -87,3 +87,43 @@ stages:
               azureResourceGroup: 'aks-cluster-template_rg001'
               kubernetesCluster: 'aks101cluster'
               manifests: '$(Pipeline.Workspace)/misc/*'
+
+- stage: PromoteRejectCanary
+  displayName: Promote or Reject canary
+  dependsOn: DeployCanary
+  condition: succeeded()
+
+  jobs:
+  - deployment: PromoteCanary
+    displayName: Promote Canary
+    pool: 
+      vmImage: ubuntu-latest
+    environment: 'akspromote'
+    strategy:
+      runOnce:
+        deploy:
+          steps:      
+          - task: KubernetesManifest@1
+            displayName: Create Docker Registry Secret for akspromote
+            inputs:
+              action: 'createSecret'
+              connectionType: 'azureResourceManager'
+              azureSubscriptionConnection: 'azure-pipelines-canary-sc'
+              azureResourceGroup: 'aks-cluster-template_rg001'
+              kubernetesCluster: 'aks101cluster'
+              secretType: 'dockerRegistry'
+              secretName: 'my-acr-secret'
+              dockerRegistryEndpoint: 'dockerhub'
+
+          - task: KubernetesManifest@1
+            displayName: promote canary
+            inputs:
+              action: 'promote'
+              connectionType: 'azureResourceManager'
+              azureSubscriptionConnection: 'azure-pipelines-canary-sc'
+              azureResourceGroup: 'aks-cluster-template_rg001'
+              kubernetesCluster: 'aks101cluster'
+              strategy: 'canary'
+              manifests: '$(Pipeline.Workspace)/manifests/*'
+              containers: '$(imageRepository):$(tag)'
+              imagePullSecrets: 'my-acr-secret'
