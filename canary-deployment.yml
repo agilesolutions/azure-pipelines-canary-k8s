@@ -93,6 +93,7 @@ stages:
   dependsOn: DeployCanary
   condition: succeeded()
 
+
   jobs:
   - deployment: PromoteCanary
     displayName: Promote Canary
