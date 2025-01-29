@@ -53,6 +53,13 @@ az bicep decompile --file ./arm-templates/azuredeploy.json
 az deployment group create --resource-group aks-cluster-template_rg001 --template-file azuredeploy.bicep --parameters dnsPrefix=rob
 ```
 
+# Blue-Green Deployment
+1. **Initialize**: Logs the start of the deployment.
+2. **Deploy Update**: Uses Helm to deploy a new version (e.g., `myapp-green`).
+3. **Route Traffic**: Updates the Kubernetes service selector to point to `myapp-green`.
+4. **Test Updated Version**: Runs tests to verify the new deployment.
+5. **Rollback**: If tests fail, traffic is routed back to `myapp-blue`, and the old version is restored.
+
 ## References
 - [Tutorial: Use a canary deployment strategy for Kubernetes](https://learn.microsoft.com/en-us/azure/devops/pipelines/ecosystems/kubernetes/canary-demo?view=azure-devops&tabs=yaml)
 

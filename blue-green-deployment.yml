@@ -1,0 +1,76 @@
+trigger:
+  branches:
+    include:
+      - main
+
+stages:
+- stage: Initialize
+  jobs:
+  - job: Initialization
+    steps:
+    - script: echo "Initializing deployment..."
+      displayName: "Initialize deployment"
+
+- stage: DeployUpdate
+  jobs:
+  - job: Deploy
+    steps:
+    - task: HelmInstaller@0
+      displayName: "Install Helm"
+      inputs:
+        helmVersion: "latest"
+
+    - task: HelmDeploy@0
+      displayName: "Deploy new version"
+      inputs:
+        connectionType: "Kubernetes Service Connection"
+        kubernetesServiceConnection: "$(K8S_SERVICE_CONNECTION)"
+        namespace: "$(K8S_NAMESPACE)"
+        command: "upgrade"
+        chartType: "FilePath"
+        chartPath: "$(HELM_CHART_PATH)"
+        releaseName: "myapp-green"
+        arguments: "--set image.tag=$(Build.BuildId)"
+
+- stage: RouteTraffic
+  dependsOn: DeployUpdate
+  jobs:
+  - job: Routing
+    steps:
+    - script: |
+        kubectl patch service myapp-service -n $(K8S_NAMESPACE) \
+        -p '{"spec": {"selector": {"app": "myapp-green"}}}'
+      displayName: "Route traffic to new version"
+
+- stage: TestUpdatedVersion
+  dependsOn: RouteTraffic
+  jobs:
+  - job: Testing
+    steps:
+    - script: echo "Running tests on updated version..."
+      displayName: "Run tests"
+    
+    - script: |
+        echo "Test successful!"
+      displayName: "Mark success"
+
+- stage: Rollback
+  dependsOn: TestUpdatedVersion
+  condition: failed()
+  jobs:
+  - job: RestorePreviousVersion
+    steps:
+    - script: |
+        kubectl patch service myapp-service -n $(K8S_NAMESPACE) \
+        -p '{"spec": {"selector": {"app": "myapp-blue"}}}'
+      displayName: "Rollback to previous version"
+
+    - task: HelmDeploy@0
+      displayName: "Rollback deployment"
+      inputs:
+        connectionType: "Kubernetes Service Connection"
+        kubernetesServiceConnection: "$(K8S_SERVICE_CONNECTION)"
+        namespace: "$(K8S_NAMESPACE)"
+        command: "rollback"
+        releaseName: "myapp-blue"
+        arguments: "0"
